@@ -105,8 +105,11 @@ EOT
 fi
 
 # checking $DATA_DIR for initialization
-if [ -d "${DATA_DIR%/}/data" ]; then
-    DATABASE_ALREADY_EXISTS='true'
+DATABASE_ALREADY_EXISTS=""
+if [ -d "${DATA_DIR}/metadata" ]; then
+  DATABASE_ALREADY_EXISTS="true"
+elif [ -d "${DATA_DIR}/data" ] && [ -n "$(ls -A "${DATA_DIR}/data" 2>/dev/null)" ]; then
+  DATABASE_ALREADY_EXISTS="true"
 fi
 
 # only run initialization on an empty data directory
