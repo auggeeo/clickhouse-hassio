@@ -26,6 +26,10 @@ CLICKHOUSE_CONFIG="${CLICKHOUSE_CONFIG:-/etc/clickhouse-server/config.xml}"
 
 # get CH directories locations
 DATA_DIR="$(clickhouse extract-from-config --config-file "$CLICKHOUSE_CONFIG" --key=path || true)"
+# HA-safe default: never fall back to empty (which becomes /data)
+if [ -z "$DATA_DIR" ] || [ "$DATA_DIR" = "/" ] || [ "$DATA_DIR" = "/data" ]; then
+  DATA_DIR="/var/lib/clickhouse"
+fi
 TMP_DIR="$(clickhouse extract-from-config --config-file "$CLICKHOUSE_CONFIG" --key=tmp_path || true)"
 USER_PATH="$(clickhouse extract-from-config --config-file "$CLICKHOUSE_CONFIG" --key=user_files_path || true)"
 LOG_PATH="$(clickhouse extract-from-config --config-file "$CLICKHOUSE_CONFIG" --key=logger.log || true)"
@@ -108,9 +112,13 @@ fi
 DATABASE_ALREADY_EXISTS=""
 if [ -d "${DATA_DIR}/metadata" ]; then
   DATABASE_ALREADY_EXISTS="true"
+  echo "database exists metadata folder"
 elif [ -d "${DATA_DIR}/data" ] && [ -n "$(ls -A "${DATA_DIR}/data" 2>/dev/null)" ]; then
   DATABASE_ALREADY_EXISTS="true"
+  echo "database exists data folder"
 fi
+
+echo "data dir: ${DATA_DIR}"
 
 # only run initialization on an empty data directory
 if [ -z "${DATABASE_ALREADY_EXISTS}" ]; then
