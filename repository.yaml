@@ -1,4 +1,4 @@
 # https://developers.home-assistant.io/docs/add-ons/repository#repository-configuration
 name: Clickhouse Home Assistant add-on repository
 url: 'https://github.com/auggeeo/clickhouse-hassio'
-maintainer: Awesome Maintainer <cooptheloop8@gmail.com>
+maintainer: auggeeo <cooptheloop8@gmail.com>
