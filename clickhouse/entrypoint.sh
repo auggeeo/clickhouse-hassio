@@ -109,7 +109,6 @@ EOT
 fi
 
 # checking $DATA_DIR for initialization
-DATABASE_ALREADY_EXISTS=""
 if [ -d "${DATA_DIR}/metadata" ]; then
   DATABASE_ALREADY_EXISTS="true"
   echo "database exists metadata folder"
